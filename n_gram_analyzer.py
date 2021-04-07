@@ -83,6 +83,7 @@ def create_n_grams(words, donem_spec):
         print("Creating " + str(current_n_gram_type))
         # with stopwords
         ngram_in_specified_type_with_stopwords = list(ngrams(words,i))
+        l_total_n_gram_instances = len(ngram_in_specified_type_with_stopwords)
         # count frequencies
         ngram_freq = collections.Counter(ngram_in_specified_type_with_stopwords)
         ngram_freq = sorted(ngram_freq.items(), key=lambda kv: kv[1], reverse=True)[0:10]
@@ -103,6 +104,28 @@ def create_n_grams(words, donem_spec):
         out_path_current_donem = join(os.getcwd(), "out", "donem_"+donem_spec.replace(" ","_")+"_"+current_n_gram_type+".png")
         fig.write_image(out_path_current_donem)
 
+        calculate_MLE(df_dict, l_total_n_gram_instances, "donem_"+donem_spec+"_"+current_n_gram_type)
+
+
+def calculate_MLE(freq_dict, total_ngram_instances, file_name):
+
+    mle = dict()
+
+    for key in freq_dict.keys():
+        mle[key] = "{:.5f}".format(float(float(freq_dict[key]) / total_ngram_instances))
+
+    save_as_csv(mle, file_name=file_name+"_mle")
+
+def save_as_csv(est_dict, file_name):
+
+    out_path = join(os.getcwd(), "out", file_name+".csv")
+
+    with open(out_path, "w", encoding="UTF-8") as f:
+        for key in est_dict.keys():
+            f.write("%s,%s\n"%(key,est_dict[key]))
+        f.flush()
+        f.close()
+
 def main():
     parse_stopwords()
 
@@ -110,11 +133,9 @@ def main():
 
     all_words_in_corpus_without_stopwords = []
 
-    for index in range(0,2):
-        print(str(index))
+    for index in range(0,8):
         # initialize the donem number combining with 2 (ex: 20, 21, 22)
         donem_number = "2" + str(index) 
-        print(donem_number)
 
         # with stopwords
         all_donem_words_with_stopwords = get_donem_words(donem_number=donem_number, with_stopwords=True)
