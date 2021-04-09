@@ -7,6 +7,7 @@ import plotly.express as px
 # to save image also kaleido should be installed
 # pip install -U kaleido
 import pandas as pd
+from concurrent.futures import ThreadPoolExecutor 
 
 stopwords = []
 
@@ -75,6 +76,8 @@ def get_donem_words(donem_number, with_stopwords):
 def create_n_grams(words, donem_spec):
     
     figure_plotting_keys = ["unigrams", "bigrams", "trigrams"]
+    
+    V = ...
 
     # create all n-grams in the loop ( unigram -> 1, bigram -> 2, trigram -> 3 )
     # plot them and svae the plotted figures in ./out path
@@ -82,15 +85,28 @@ def create_n_grams(words, donem_spec):
         current_n_gram_type = figure_plotting_keys[i-1]
         print("Creating " + str(current_n_gram_type))
         # with stopwords
+
         ngram_in_specified_type_with_stopwords = list(ngrams(words,i))
         l_total_n_gram_instances = len(ngram_in_specified_type_with_stopwords)
         # count frequencies
-        ngram_freq = collections.Counter(ngram_in_specified_type_with_stopwords)
-        ngram_freq = sorted(ngram_freq.items(), key=lambda kv: kv[1], reverse=True)[0:10]
+        ngram_freq = collections.Counter(ngram_in_specified_type_with_stopwords) # unigram
+        
+        if i==1:
+            V=len(ngram_freq)
+
+        ngram_freq_sorted = sorted(ngram_freq.items(), key=lambda kv: kv[1], reverse=True)
+        
+        df_n_gram_freq = dict()
+
+        for item in ngram_freq_sorted:
+            df_n_gram_freq[str(item[0])] = item[1]
+        
+        ngram_freq_sorted_10 = ngram_freq_sorted[0:10] 
         # plot them
-        print(str(ngram_freq))
+        print(str(ngram_freq_sorted_10))
+        
         df_dict = dict()
-        for item in ngram_freq:
+        for item in ngram_freq_sorted_10:
             df_dict[str(item[0])] = item[1]
 
         df = pd.Series(df_dict).to_frame()
@@ -101,24 +117,98 @@ def create_n_grams(words, donem_spec):
                     height=540)
         
         # set out path for saving the figure of the donem
-        out_path_current_donem = join(os.getcwd(), "out", "donem_"+donem_spec.replace(" ","_")+"_"+current_n_gram_type+".png")
+        out_path_graphs_base = join(os.getcwd(), "out","graphs", "donem_"+donem_spec )
+
+        if not os.path.exists(out_path_graphs_base):
+            os.mkdir(out_path_graphs_base)
+
+        out_path_current_donem = join(out_path_graphs_base, current_n_gram_type+".png")
         fig.write_image(out_path_current_donem)
 
-        calculate_MLE(df_dict, l_total_n_gram_instances, "donem_"+donem_spec+"_"+current_n_gram_type)
+        calcculate_MLE(df_n_gram_freq, l_total_n_gram_instances, "donem_"+donem_spec, current_n_gram_type)
+        calculate_LAP(df_n_gram_freq, l_total_n_gram_instances, i ,"donem_"+donem_spec, current_n_gram_type)
+        calculate_LDSTN(df_n_gram_freq, l_total_n_gram_instances, i ,"donem_"+donem_spec, current_n_gram_type)
+        calculate_JP(df_n_gram_freq, l_total_n_gram_instances, i ,"donem_"+donem_spec, current_n_gram_type)
 
+        calculate_GT(ngram_freq, l_total_n_gram_instances, V , i, "donem_"+donem_spec, current_n_gram_type )
 
-def calculate_MLE(freq_dict, total_ngram_instances, file_name):
+def calculate_GT(freq_dict, N, V, n, donem, file_name):
+
+    Nr_ngrams = {n:[k for k in freq_dict.keys() if freq_dict[k] == n] for n in set(freq_dict.values())}
+    r_adjustedr_pgt_nr = dict()
+    
+    # unseen prob
+    prob_for_all_unseen = len(Nr_ngrams[1])/N #TODO use this in the presentation
+    r_adjustedr_pgt_nr[0] = (0, prob_for_all_unseen, prob_for_all_unseen/((V**n) - N)) #TODO replace 2 by n-gram's value of n
+    
+    for r in Nr_ngrams:
+        k = r + 1
+        if k not in Nr_ngrams: k = r # case when r does not exist or r is the highest value. 
+        adjusted_r = (r+1) * (len(Nr_ngrams[k])/N)
+        prob_gt = adjusted_r/N
+        r_adjustedr_pgt_nr[r] = (r, adjusted_r, prob_gt, len(Nr_ngrams[r]))
+
+    save_as_csv(r_adjustedr_pgt_nr, donem, file_name=file_name+"_gt")
+
+# Maximum Likelihood Estimation
+def calculate_MLE(freq_dict, total_ngram_instances, donem, file_name):
 
     mle = dict()
 
     for key in freq_dict.keys():
-        mle[key] = "{:.5f}".format(float(float(freq_dict[key]) / total_ngram_instances))
+        mle[key] = "{:.10f}".format(float(float(freq_dict[key]) / total_ngram_instances))
 
-    save_as_csv(mle, file_name=file_name+"_mle")
+    save_as_csv(mle, donem, file_name=file_name+"_MLE")
 
-def save_as_csv(est_dict, file_name):
+# Laplace Law
+def calculate_LAP(freq_dict, total_ngram_instances, n, donem, file_name ):
 
-    out_path = join(os.getcwd(), "out", file_name+".csv")
+    V = total_ngram_instances
+    B = V ** n
+
+    lap = dict()
+
+    for key in freq_dict:
+        lap[key] = "{:.10f}".format(float( (float(freq_dict[key]) + 1) / (total_ngram_instances + B) ))
+
+    save_as_csv(lap, donem, file_name=file_name+"_LAP")
+
+# Lidstone's Law
+def calculate_LDSTN(freq_dict, total_ngram_instances, n, donem, file_name ):
+
+    lambda_ = 0.25
+    V = total_ngram_instances
+    B = V ** n
+
+    lap = dict()
+
+    for key in freq_dict:
+        lap[key] = "{:.10f}".format(float( (float(freq_dict[key]) + lambda_) / (total_ngram_instances + (B*lambda_)) ))
+
+    save_as_csv(lap, donem, file_name=file_name+"_LDSTN")
+
+# Jeffreys Perks Law
+def calculate_JP(freq_dict, total_ngram_instances, n, donem, file_name ):
+
+    lambda_ = 0.5
+    V = total_ngram_instances
+    B = V ** n
+
+    lap = dict()
+
+    for key in freq_dict:
+        lap[key] = "{:.10f}".format(float( (float(freq_dict[key]) + lambda_) / (total_ngram_instances + (B*lambda_)) ))
+
+    save_as_csv(lap, donem, file_name=file_name+"_JP")
+
+def save_as_csv(est_dict, donem, file_name):
+
+    out_path_base = join(os.getcwd(), "out","est_stats", donem )
+
+    if not os.path.exists(out_path_base):
+        os.mkdir(out_path_base)
+
+    out_path = join(out_path_base, file_name+".csv")
 
     with open(out_path, "w", encoding="UTF-8") as f:
         for key in est_dict.keys():
@@ -133,7 +223,7 @@ def main():
 
     all_words_in_corpus_without_stopwords = []
 
-    for index in range(0,8):
+    for index in range(0,1):
         # initialize the donem number combining with 2 (ex: 20, 21, 22)
         donem_number = "2" + str(index) 
 
@@ -146,12 +236,12 @@ def main():
         all_donem_words_without_stopwords = get_donem_words(donem_number=donem_number, with_stopwords=False)
         # add donem words to general wtihout stopwords corpus list (without stopwords)
         all_words_in_corpus_without_stopwords += all_donem_words_without_stopwords
-
+        
         create_n_grams(all_donem_words_with_stopwords, donem_number)
-        create_n_grams(all_donem_words_without_stopwords, donem_number+" without stopwords")
+        create_n_grams(all_donem_words_without_stopwords, donem_number+"_without_stopwords")
 
-    create_n_grams(all_words_in_corpus_with_stopwords, "all donems")
-    create_n_grams(all_words_in_corpus_without_stopwords, "all donems without stopwords")
+    create_n_grams(all_words_in_corpus_with_stopwords, "all_donems")
+    create_n_grams(all_words_in_corpus_without_stopwords, "all_donems_without_stopwords")
     
     print("all process is done !")
     #print(str(all_words_in_corpus_without_stopwords))
