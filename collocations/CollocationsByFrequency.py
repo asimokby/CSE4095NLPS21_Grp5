@@ -1,5 +1,3 @@
-import os
-import re
 from nltk.util import ngrams
 from nltk import word_tokenize
 from nltk.corpus import stopwords 
@@ -8,34 +6,6 @@ from collections import Counter
 
 
 class CollocationsByFrequency:
-
-    def clean_text(self, text):
-        
-        """This function will process the text and clean it before extracting the collocations
-        """
-        words=re.sub("[IVX]+\\.","", text) #roman numbers
-        words = re.split(r'\W+', words)  #punctionation
-        string_words = ' '.join((item for item in words if not item.isdigit())) #numbers
-        tokens = [token for token in string_words.split(" ") if (token != "" and len(token)>1)] 
-        return tokens
-
-    def load_donem_data(self, donem_number):
-        
-        """Returns all the text found in a donem directory"""
-        
-        donem_text = ''
-        donem_dir_path = os.path.join(os.getcwd(), f'corpus/donem{donem_number}') 
-        walks = os.walk(donem_dir_path)
-        for walk in walks:
-            path, dirs, files = walk
-            for file in files:
-                file_path = os.path.join(path, file)
-                if not file_path.endswith('txt'): continue  # avoid reading .DS_Store files (for mac users)
-                with open(file_path, 'r') as f:
-                    donem_text += f.read()
-                    break
-        return self.clean_text(donem_text)
-
 
     def tag_collocations(self, collocations):
         
@@ -63,15 +33,14 @@ class CollocationsByFrequency:
                 filtered_collocations.append(collocation)
         return filtered_collocations
 
-    def get_collocations(self, donem_number):
+    def get_collocations(self, donem_text):
         
-        """Returns bigrams(collocations) list given a donem_number """
-        
-        donem_text = self.load_donem_data(donem_number)
+        """Returns bigrams(collocations) list given a donem_text """
+
         collocations = list(ngrams(donem_text, 2)) # extracting bigrams
         collocations_freqs = Counter(collocations)
         collocations_freqs = sorted(collocations_freqs.items(), key=lambda kv: kv[1], reverse=True)[:10]
         tagged_collocations = self.tag_collocations(collocations_freqs)
-        pos_filter_list = set([('NN', 'NA'), ('AN', 'NN')])
+        pos_filter_list = set([('NA', 'NN'), ('NA', 'NN')])
         filtered_collocations = self.pos_filter(tagged_collocations, pos_filter_list)
         return filtered_collocations
