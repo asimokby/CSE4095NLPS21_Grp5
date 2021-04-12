@@ -1,5 +1,6 @@
 from CollocationsByFrequency import CollocationsByFrequency
 
+
 def main():
 
     # Method 1: Frequency 
