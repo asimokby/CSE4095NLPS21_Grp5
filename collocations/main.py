@@ -27,7 +27,6 @@ def load_donem_data(donem_number):
             if not file_path.endswith('txt'): continue  # avoid reading .DS_Store files (for mac users)
             with open(file_path, 'r') as f:
                 donem_text += f.read()
-                break
     return clean_text(donem_text)
 
 
@@ -38,7 +37,7 @@ def main():
     collocation_by_frquency = CollocationsByFrequency()
 
     # main loop
-    donem_nums = range(20, 21)
+    donem_nums = range(20, 21) #TODO make this (20, 28)
     for donem_num in donem_nums:
         donem_text = load_donem_data(donem_num)
         collocations = collocation_by_frquency.get_collocations(donem_text)
