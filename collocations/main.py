@@ -1,7 +1,7 @@
 import os
 import re
 from CollocationsByFrequency import CollocationsByFrequency
-
+from MutualInformation import MutualInformation
 
 
 def clean_text(text):
@@ -27,6 +27,7 @@ def load_donem_data(donem_number):
             if not file_path.endswith('txt'): continue  # avoid reading .DS_Store files (for mac users)
             with open(file_path, 'r') as f:
                 donem_text += f.read()
+                break #TODO  Remove this before generating the actual results. (it is like this now to test the methods faster)
     return clean_text(donem_text)
 
 
@@ -34,13 +35,23 @@ def load_donem_data(donem_number):
 def main():
 
     # Method 1: Frequency 
-    collocation_by_frquency = CollocationsByFrequency()
+    collocations_by_frquency = CollocationsByFrequency()
+
+    # Method 2: MutualInformation
+    mutual_information = MutualInformation()
+
 
     # main loop
     donem_nums = range(20, 21) #TODO make this (20, 28)
     for donem_num in donem_nums:
         donem_text = load_donem_data(donem_num)
-        collocations = collocation_by_frquency.get_collocations(donem_text)
-        print(collocations)
+
+        #TODO save these as reslults for the presentation
+        # Method 1
+        collocations_frequency = collocations_by_frquency.get_collocations(donem_text)
+
+        #Method 2
+        collocations_mi = mutual_information.get_collocations(donem_text)
+
 
 main()
