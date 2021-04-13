@@ -32,15 +32,12 @@ class CollocationsByFrequency:
             if tag not in filter_tags_list:
                 filtered_collocations.append(collocation)
         return filtered_collocations
-
-    def get_collocations(self, donem_text):
+    
+    def get_collocations(self, bigrams_with_freqs):
         
         """Returns bigrams(collocations) list given a donem_text """
 
-        collocations = list(ngrams(donem_text, 2)) # extracting bigrams
-        collocations_freqs = Counter(collocations)
-        collocations_freqs = sorted(collocations_freqs.items(), key=lambda kv: kv[1], reverse=True)[:100]
-        tagged_collocations = self.tag_collocations(collocations_freqs)
+        tagged_collocations = self.tag_collocations(bigrams_with_freqs)
         pos_filter_list = set([('NA', 'NN'), ('NA', 'NN')])
         filtered_collocations = self.pos_filter(tagged_collocations, pos_filter_list)
         return filtered_collocations
