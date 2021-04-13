@@ -2,7 +2,9 @@ import os
 import re
 from collocations_by_frequency import CollocationsByFrequency
 from MutualInformation import MutualInformation
-
+from Ttest import Ttest
+from collections import Counter
+from nltk.util import ngrams
 
 def clean_text(text):
     """This function will process the text and clean it before extracting the collocations
@@ -31,6 +33,13 @@ def load_donem_data(donem_number):
     return clean_text(donem_text)
 
 
+def get_bigrams_with_freqs(donem_text):
+
+    collocations = list(ngrams(donem_text, 2)) # extracting bigrams
+    collocations_freqs = Counter(collocations)
+    collocations_freqs = sorted(collocations_freqs.items(), key=lambda kv: kv[1], reverse=True)[:100]
+    
+    return dict(collocations_freqs)
 
 def main():
 
@@ -40,18 +49,25 @@ def main():
     # Method 2: MutualInformation
     mutual_information = MutualInformation()
 
+    # Method 3: T-test
+    t_test = Ttest()
 
     # main loop
     donem_nums = range(20, 21) #TODO make this (20, 28)
     for donem_num in donem_nums:
         donem_text = load_donem_data(donem_num)
+        bigrams_with_freqs = get_bigrams_with_freqs(donem_text)
 
         #TODO save these as reslults for the presentation
+
         # Method 1
-        collocations_frequency = collocations_by_frquency.get_collocations(donem_text)
+        collocations_frequency = collocations_by_frquency.get_collocations(bigrams_with_freqs)
 
         #Method 2
-        collocations_mi = mutual_information.get_collocations(donem_text)
+        collocations_mi = mutual_information.get_collocations(donem_text, bigrams_with_freqs)
+        
+        #Method 3
+        collocations_Ttest = t_test.get_collocations(donem_text, bigrams_with_freqs)
 
 
 main()
