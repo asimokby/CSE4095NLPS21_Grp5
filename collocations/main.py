@@ -1,13 +1,13 @@
 import os
 import re
 from collocations_by_frequency import CollocationsByFrequency
-from MutualInformation import MutualInformation
+from collocations_by_mutual_information import MutualInformation
 from Ttest import Ttest
 from collections import Counter
 from nltk.util import ngrams
 
 def clean_text(text):
-    """This function will process the text and clean it before extracting the collocations
+    """This function will process the t1ext and clean it before extracting the collocations
     """
     words=re.sub("[IVX]+\\.","", text) #roman numbers
     words = re.split(r'\W+', words)  #punctionation
@@ -37,7 +37,7 @@ def get_bigrams_with_freqs(donem_text):
 
     collocations = list(ngrams(donem_text, 2)) # extracting bigrams
     collocations_freqs = Counter(collocations)
-    collocations_freqs = sorted(collocations_freqs.items(), key=lambda kv: kv[1], reverse=True)[:100]
+    collocations_freqs = sorted(collocations_freqs.items(), key=lambda kv: kv[1], reverse=True)[:5]
     
     return dict(collocations_freqs)
 
@@ -62,12 +62,15 @@ def main():
 
         # Method 1
         collocations_frequency = collocations_by_frquency.get_collocations(bigrams_with_freqs)
-
+        for col in collocations_frequency:
+            print(col)
         #Method 2
         collocations_mi = mutual_information.get_collocations(donem_text, bigrams_with_freqs)
-
+        for col in collocations_mi:
+            print(col)
         #Method 3
         collocations_Ttest = t_test.get_collocations(donem_text, bigrams_with_freqs)
-
+        for col in collocations_Ttest:
+            print(col)
 
 main()

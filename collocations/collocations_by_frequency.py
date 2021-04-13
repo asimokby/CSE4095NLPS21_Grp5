@@ -11,17 +11,24 @@ class CollocationsByFrequency():
         self.pos_tagger = TurkishMorphology.create_with_defaults()
 
     def get_pos_tags(self, word):
+        
         r_tags = []
-        tags = self.pos_tagger.analyze(word)
+        tags = self.pos_tagger.analyze(word.strip())
         tags_str = str(tags)
-       
+
+        # print(tags_str, 'please look at me')
+
+        # print(self.pos_tagger.analyze('Büyük'))
         if ":Adj" in tags_str:
             r_tags.append("A")
         
         if ":Noun" in tags_str:
             r_tags.append("N")
 
-        return r_tags[0]
+
+        if len(r_tags) > 0:
+            return r_tags[0]
+        return ''
 
 
     def tag_collocations(self, collocations):
@@ -31,7 +38,7 @@ class CollocationsByFrequency():
         freq_collocation_tag = []
         for collocation in collocations:
             frequency_of_collocation = collocation[1]
-            tag_of_collocation = self.get_pos_tags([collocation[0][0]]), self.get_pos_tags([collocation[0][1]])
+            tag_of_collocation = self.get_pos_tags(collocation[0])+ self.get_pos_tags(collocation[1])
             freq_collocation_tag_tuple = frequency_of_collocation, collocation[0], tag_of_collocation
             freq_collocation_tag.append(freq_collocation_tag_tuple)
             
