@@ -1,6 +1,6 @@
 import os
 import re
-from CollocationsByFrequency import CollocationsByFrequency
+from collocations_by_frequency import CollocationsByFrequency
 from MutualInformation import MutualInformation
 from Ttest import Ttest
 from collections import Counter
