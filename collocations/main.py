@@ -65,7 +65,7 @@ def main():
 
         #Method 2
         collocations_mi = mutual_information.get_collocations(donem_text, bigrams_with_freqs)
-        
+
         #Method 3
         collocations_Ttest = t_test.get_collocations(donem_text, bigrams_with_freqs)
 

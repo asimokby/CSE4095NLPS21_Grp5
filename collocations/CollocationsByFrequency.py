@@ -14,6 +14,7 @@ class CollocationsByFrequency:
         freq_collocation_tag = []
         for collocation in collocations:
             frequency_of_collocation = collocation[1]
+            print("look here asem:", pos_tag(['hello']))
             tag_of_collocation = pos_tag([collocation[0][0]])[0][1], pos_tag([collocation[0][1]])[0][1]
             freq_collocation_tag_tuple = frequency_of_collocation, collocation[0], tag_of_collocation
             freq_collocation_tag.append(freq_collocation_tag_tuple)
@@ -27,7 +28,7 @@ class CollocationsByFrequency:
             e.g. filter_list = set([('NN', 'NN'), ('AN', 'NN')])
         '''
         filtered_collocations = []
-        for collocation in tagged_collocations:
+        for collocation in tagged_collocations: 
             tag = collocation[2]
             if tag not in filter_tags_list:
                 filtered_collocations.append(collocation)
