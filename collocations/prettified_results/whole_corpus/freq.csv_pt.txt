@@ -1,27 +1,26 @@
 
 
-
 +----------+----------------------------------+-------------+
 | C(w1;w2) |           collocation            | tag pattern |
 +----------+----------------------------------+-------------+
-|  18189   |  "('sıralarından', 'alkışlar')"  |      NN     |
+|  31127   |  "('sıralarından', 'alkışlar')"  |      NN     |
 |          |                                  |             |
-|  17993   |      "('Büyük', 'Millet')"       |      AN     |
+|  21568   |   "('ilişkin', 'açıklaması')"    |      NN     |
 |          |                                  |             |
-|  16761   |      "('soru', 'önergesi')"      |      NN     |
+|  17052   |     "('otomatik', 'cihaz')"      |      AN     |
 |          |                                  |             |
-|  13162   |     "('Millet', 'Meclisi')"      |      NN     |
+|  17043   |    "('cihaz', 'tarafından')"     |      NN     |
 |          |                                  |             |
-|   9978   |       "('yazılı', 'soru')"       |      AN     |
+|  13058   |      "('Büyük', 'Millet')"       |      AN     |
 |          |                                  |             |
-|   9381   |     "('BAŞKAN', 'Teşekkür')"     |      AN     |
+|  12071   |    "('CHP', 'sıralarından')"     |      NN     |
 |          |                                  |             |
-|   9217   |   "('önergesi', 'Başkanlığa')"   |      NN     |
+|  11810   |      "('Kanun', 'Teklifi')"      |      NN     |
 |          |                                  |             |
-|   9111   | "('değerli', 'milletvekilleri')" |      AN     |
+|  11438   | "('değerli', 'milletvekilleri')" |      AN     |
 |          |                                  |             |
-|   8976   |       "('Türkiye', 'de')"        |      AN     |
+|  11418   |     "('Teşekkür', 'ederim')"     |      NN     |
 |          |                                  |             |
-|   8805   |      "('Kabul', 'edenler')"      |      NN     |
+|  10473   |     "('Merkezî', 'Yönetim')"     |      AN     |
 |          |                                  |             |
 +----------+----------------------------------+-------------+

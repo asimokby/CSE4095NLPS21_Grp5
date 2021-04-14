@@ -8,11 +8,11 @@ def main():
     src_base = join(getcwd(), "collocations","results")
     out_base_prettified = join(getcwd(), "collocations", "prettified_results")
 
-    for i in range(0,8):
+    for i in range(0,1):
 
         donem_number = "2" + str(i)
         # "donem_"+donem_number+"_without_stopwords"
-        src_path = join(src_base, "donem_"+str(donem_number))
+        src_path = join(src_base, "whole_corpus")
         all_files = listdir(src_path)
 
         for f in all_files:
@@ -27,6 +27,9 @@ def main():
 
             count = 0
             for line in src_file.readlines():
+                if line == "\n":
+                    continue
+
                 row_arr = []
                 line_split = line.split(",")
                 if "freq" in f:
@@ -40,7 +43,7 @@ def main():
                 if count == 10:
                     break
 
-            out_base_donem = join(out_base_prettified, "donem_"+str(donem_number))
+            out_base_donem = join(out_base_prettified, "whole_corpus")
             
             if not exists(out_base_donem):
                 makedirs(out_base_donem)
