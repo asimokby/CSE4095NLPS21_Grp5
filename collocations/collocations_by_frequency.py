@@ -15,10 +15,7 @@ class CollocationsByFrequency():
         r_tags = []
         tags = self.pos_tagger.analyze(word.strip())
         tags_str = str(tags)
-
-        # print(tags_str, 'please look at me')
-
-        # print(self.pos_tagger.analyze('Büyük'))
+        
         if ":Adj" in tags_str:
             r_tags.append("A")
         
@@ -31,15 +28,15 @@ class CollocationsByFrequency():
         return ''
 
 
-    def tag_collocations(self, collocations):
+    def tag_collocations(self, bigrams_with_freqs):
         
         ''' part of speech tagging for all the collocations passed'''
         
         freq_collocation_tag = []
-        for collocation in collocations:
-            frequency_of_collocation = collocation[1]
+        for collocation in bigrams_with_freqs:
+            frequency_of_collocation = bigrams_with_freqs[collocation]
             tag_of_collocation = self.get_pos_tags(collocation[0])+ self.get_pos_tags(collocation[1])
-            freq_collocation_tag_tuple = frequency_of_collocation, collocation[0], tag_of_collocation
+            freq_collocation_tag_tuple = frequency_of_collocation, collocation, tag_of_collocation
             freq_collocation_tag.append(freq_collocation_tag_tuple)
             
         return freq_collocation_tag
@@ -49,7 +46,6 @@ class CollocationsByFrequency():
         
         ''' Takes a set of tuples  containing the tags to be filtered and returns
             filtered version of the collocations
-            e.g. filter_list = set([('NN', 'NN'), ('AN', 'NN')])
         '''
         filtered_collocations = []
         for collocation in tagged_collocations:
