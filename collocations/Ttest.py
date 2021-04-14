@@ -11,7 +11,10 @@ class Ttest():
         expected_mean = (w1_freq/normlize)*(w2_freq/normlize)
         observed_mean = bigram_frequncy/normlize
         variance = observed_mean
-        t_value = (observed_mean - expected_mean)/math.sqrt(observed_mean/normlize)
+        try: 
+            t_value = (observed_mean - expected_mean)/math.sqrt(observed_mean/normlize)
+        except: 
+            t_value = 0
         return (t_value, w1_freq, w2_freq, bigram_frequncy, bigram)
 
     def get_collocations(self, donem_text, bigrams_with_freqs):

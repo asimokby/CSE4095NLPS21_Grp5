@@ -85,9 +85,7 @@ def main():
         """print(f"Donem {str(donem_num)} bigrams extracting processing..")
         bigrams_with_freqs = get_bigrams_with_freqs(donem_text)"""
 
-        if donem_num != 27:
-            continue
-        print("i am in asem")
+        """
         pk_file = open(out_base+os.sep+"donem_"+str(donem_num)+".pk", "rb")
         bigrams_with_freqs = pickle.load(pk_file)
         
@@ -105,7 +103,8 @@ def main():
         # Method 3: T-test
         collocations_Ttest = t_test.get_collocations(donem_text, bigrams_with_freqs)
         save_as_csv(collocations_Ttest, 't_test', donem_num, table_header_ttest)
-
+        """
+        
     # All donems together
     """ print("Collocations will start..")
     all_donems_bigrams_with_freqs = get_bigrams_with_freqs(all_donem_text)

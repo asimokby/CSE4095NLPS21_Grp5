@@ -11,7 +11,7 @@ class MutualInformation():
         try:
             mutual_information = ((bigram_frequncy/normlize)/((w1_freq/normlize)*(w2_freq/normlize)))
         except ZeroDivisionError:
-            mutual_information = 0
+            mutual_information = 1
 
         mi_value = math.log2(mutual_information)
         return (mi_value, w1_freq, w2_freq, bigram_frequncy, bigram)
