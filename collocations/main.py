@@ -42,9 +42,13 @@ def get_bigrams_with_freqs(donem_text):
     return dict(collocations_freqs)
 
 
-def save_as_csv(data, file_name, donem_num, header):
+def save_as_csv(data, file_name, donem_num, header, all_donems=False):
 
-    path = os.path.join(os.getcwd(), f'collocations/results/donem_{donem_num}/')
+    if all_donems:
+        path = os.path.join(os.getcwd(), f'collocations/results/whole_corpus/')
+    else: 
+        path = os.path.join(os.getcwd(), f'collocations/results/donem_{donem_num}/')
+
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -63,23 +67,38 @@ def main():
     t_test = Ttest()
 
     donem_nums = range(20, 28) 
+    all_donem_text = []
+    table_header_freq = ['C(w1;w2)', 'collocation', 'tag pattern']
+    table_header_mi = ['I(w1;w2)', 'C(w1)', 'C(w2)', 'C(w1;w2)', 'collocation']
+    table_header_ttest = ['t', 'C(w1)', 'C(w2)', 'C(w1;w2)', 'collocation']
     for donem_num in donem_nums:
         donem_text = load_donem_data(donem_num)
-        bigrams_with_freqs = get_bigrams_with_freqs(donem_text)
+        all_donem_text.extend(donem_text)
+        # bigrams_with_freqs = get_bigrams_with_freqs(donem_text)
 
         # Method 1: Frequency 
-        collocations_frequency = collocations_by_frquency.get_collocations(bigrams_with_freqs)
-        table_header = ['C(w1;w2)', 'collocation', 'tag pattern']
-        save_as_csv(collocations_frequency, 'freq', donem_num, table_header)
+        # collocations_frequency = collocations_by_frquency.get_collocations(bigrams_with_freqs)
+        # save_as_csv(collocations_frequency, 'freq', donem_num, table_header_freq)
 
         # Method 2: MutualInformation
-        collocations_mi = mutual_information.get_collocations(donem_text, bigrams_with_freqs)
-        table_header = ['I(w1;w2)', 'C(w1)', 'C(w2)', 'C(w1;w2)', 'collocation']
-        save_as_csv(collocations_mi, 'MI', donem_num, table_header)
+        # collocations_mi = mutual_information.get_collocations(donem_text, bigrams_with_freqs)
+        # save_as_csv(collocations_mi, 'MI', donem_num, table_header_mi)
         
         # Method 3: T-test
-        collocations_Ttest = t_test.get_collocations(donem_text, bigrams_with_freqs)
-        table_header = ['t', 'C(w1)', 'C(w2)', 'C(w1;w2)', 'collocation']
-        save_as_csv(collocations_mi, 't_test', donem_num, table_header)
+        # collocations_Ttest = t_test.get_collocations(donem_text, bigrams_with_freqs)
+        # save_as_csv(collocations_mi, 't_test', donem_num, table_header_ttest)
+
+    # All donems together
+    all_donems_bigrams_with_freqs = get_bigrams_with_freqs(all_donem_text)
+
+    collocations_frequency = collocations_by_frquency.get_collocations(all_donems_bigrams_with_freqs)
+    save_as_csv(collocations_frequency, 'freq', 0, table_header_freq, all_donems=True)
+
+    collocations_mi = mutual_information.get_collocations(donem_text, all_donems_bigrams_with_freqs)
+    save_as_csv(collocations_mi, 'MI', 0, table_header_mi, all_donems=True)
+
+    collocations_Ttest = t_test.get_collocations(donem_text, all_donems_bigrams_with_freqs)
+    save_as_csv(collocations_mi, 't_test', 0, table_header_ttest, all_donems=True)
+
 
 main()
