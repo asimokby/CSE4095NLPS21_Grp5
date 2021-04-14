@@ -1,0 +1,24 @@
++----------+----------------------------------+-------------+
+| C(w1;w2) |           collocation            | tag pattern |
++----------+----------------------------------+-------------+
+|   340    |      "('Büyük', 'Millet')"       |      AN     |
+|          |                                  |             |
+|   318    |  "('sıralarından', 'alkışlar')"  |      NN     |
+|          |                                  |             |
+|   215    |     "('Millet', 'Meclisi')"      |      NN     |
+|          |                                  |             |
+|   117    |   "('Milliyetçi', 'Hareket')"    |      NN     |
+|          |                                  |             |
+|   117    |  "('Sayın', 'milletvekilleri')"  |      AN     |
+|          |                                  |             |
+|   111    |   "('BALUKEN', 'Diyarbakır')"    |      NN     |
+|          |                                  |             |
+|   108    |     "('Cumhuriyet', 'Halk')"     |      NN     |
+|          |                                  |             |
+|    98    |       "('OKTAY', 'VURAL')"       |      NN     |
+|          |                                  |             |
+|    87    | "('sıralarından', 'gürültüler')" |      NN     |
+|          |                                  |             |
+|    84    |    "('Millet', 'Meclisinin')"    |      NN     |
+|          |                                  |             |
++----------+----------------------------------+-------------+
