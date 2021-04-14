@@ -7,9 +7,9 @@
 |          |                                  |             |
 |   215    |     "('Millet', 'Meclisi')"      |      NN     |
 |          |                                  |             |
-|   117    |   "('Milliyetçi', 'Hareket')"    |      NN     |
-|          |                                  |             |
 |   117    |  "('Sayın', 'milletvekilleri')"  |      AN     |
+|          |                                  |             |
+|   117    |   "('Milliyetçi', 'Hareket')"    |      NN     |
 |          |                                  |             |
 |   111    |   "('BALUKEN', 'Diyarbakır')"    |      NN     |
 |          |                                  |             |
