@@ -87,11 +87,6 @@ X, y = get_data(50000)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-a= ['Corina', 'Casanova', ',', 'İsviçre', 'Federal', 'Şansölyesidir', '.']
-b = ['B-PERSON', 'I-PERSON', 'O', 'B-LOCATION', 'O', 'B-MISC', 'O']
-
-
-
 
 def train_model():
 
