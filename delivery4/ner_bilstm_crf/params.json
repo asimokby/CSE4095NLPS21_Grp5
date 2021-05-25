@@ -1,0 +1,18 @@
+{
+    "char_embedding_dim": 25,
+    "char_lstm_size": 25,
+    "char_vocab_size": 128,
+    "dropout": 0.8,
+    "fc_dim": 100,
+    "filter_length": 3,
+    "filter_size": 30,
+    "learn_mode": "join",
+    "num_labels": 10,
+    "use_char": true,
+    "use_cnn": false,
+    "use_crf": true,
+    "use_extra_layer": false,
+    "word_embedding_dim": 300,
+    "word_lstm_size": 20,
+    "word_vocab_size": 98048
+}
